@@ -1,9 +1,9 @@
 {
   "packageManager": "pnpm@9.14.4",
-  "name": "P-Stream",
-  "version": "5.0.0",
-  "private": true,
-  "homepage": "https://github.com/p-stream/p-stream",
+  "name": "Sudo-Flix",
+  "version": "5.0.1",
+  "private": false,
+  "homepage": "https://github.com/sudo-flix-nl/sudo-flix",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
