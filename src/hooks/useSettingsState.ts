@@ -44,6 +44,7 @@ export function useSettingsState(
   proxyUrls: string[] | null,
   backendUrl: string | null,
   febboxKey: string | null,
+  realDebridKey: string | null,
   profile:
     | {
         colorA: string;
@@ -69,6 +70,12 @@ export function useSettingsState(
     useDerived(backendUrl);
   const [febboxKeyState, setFebboxKey, resetFebboxKey, febboxKeyChanged] =
     useDerived(febboxKey);
+  const [
+    realDebridKeyState,
+    setRealDebridKey,
+    resetRealDebridKey,
+    realDebridKeyChanged,
+  ] = useDerived(realDebridKey);
   const [themeState, setTheme, resetTheme, themeChanged] = useDerived(theme);
   const setPreviewTheme = usePreviewThemeStore((s) => s.setPreviewTheme);
   const resetPreviewTheme = useCallback(
@@ -162,6 +169,7 @@ export function useSettingsState(
     resetProxyUrls();
     resetBackendUrl();
     resetFebboxKey();
+    resetRealDebridKey();
     resetDeviceName();
     resetProfile();
     resetEnableThumbnails();
@@ -185,6 +193,7 @@ export function useSettingsState(
     backendUrlChanged ||
     proxyUrlsChanged ||
     febboxKeyChanged ||
+    realDebridKeyChanged ||
     profileChanged ||
     enableThumbnailsChanged ||
     enableAutoplayChanged ||
@@ -235,6 +244,11 @@ export function useSettingsState(
       state: febboxKeyState,
       set: setFebboxKey,
       changed: febboxKeyChanged,
+    },
+    realDebridKey: {
+      state: realDebridKeyState,
+      set: setRealDebridKey,
+      changed: realDebridKeyChanged,
     },
     profile: {
       state: profileState,

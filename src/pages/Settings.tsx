@@ -134,6 +134,9 @@ export function SettingsPage() {
   const febboxKey = usePreferencesStore((s) => s.febboxKey);
   const setFebboxKey = usePreferencesStore((s) => s.setFebboxKey);
 
+  const realDebridKey = usePreferencesStore((s) => s.realDebridKey);
+  const setRealDebridKey = usePreferencesStore((s) => s.setRealDebridKey);
+
   const enableThumbnails = usePreferencesStore((s) => s.enableThumbnails);
   const setEnableThumbnails = usePreferencesStore((s) => s.setEnableThumbnails);
 
@@ -195,10 +198,13 @@ export function SettingsPage() {
         if (settings.febboxKey) {
           setFebboxKey(settings.febboxKey);
         }
+        if (settings.realDebridKey) {
+          setRealDebridKey(settings.realDebridKey);
+        }
       }
     };
     loadSettings();
-  }, [account, backendUrl, setFebboxKey]);
+  }, [account, backendUrl, setFebboxKey, setRealDebridKey]);
 
   const state = useSettingsState(
     activeTheme,
@@ -208,6 +214,7 @@ export function SettingsPage() {
     proxySet,
     backendUrlSetting,
     febboxKey,
+    realDebridKey,
     account ? account.profile : undefined,
     enableThumbnails,
     enableAutoplay,
@@ -264,6 +271,7 @@ export function SettingsPage() {
         state.theme.changed ||
         state.proxyUrls.changed ||
         state.febboxKey.changed ||
+        state.realDebridKey.changed ||
         state.enableThumbnails.changed ||
         state.enableAutoplay.changed ||
         state.enableSkipCredits.changed ||
@@ -281,6 +289,7 @@ export function SettingsPage() {
           applicationTheme: state.theme.state,
           proxyUrls: state.proxyUrls.state?.filter((v) => v !== "") ?? null,
           febboxKey: state.febboxKey.state,
+          realDebridKey: state.realDebridKey.state,
           enableThumbnails: state.enableThumbnails.state,
           enableAutoplay: state.enableAutoplay.state,
           enableSkipCredits: state.enableSkipCredits.state,
@@ -325,6 +334,7 @@ export function SettingsPage() {
     setProxySet(state.proxyUrls.state?.filter((v) => v !== "") ?? null);
     setEnableSourceOrder(state.enableSourceOrder.state);
     setFebboxKey(state.febboxKey.state);
+    setRealDebridKey(state.realDebridKey.state);
     setProxyTmdb(state.proxyTmdb.state);
     setEnableCarouselView(state.enableCarouselView.state);
 
@@ -348,6 +358,7 @@ export function SettingsPage() {
     backendUrl,
     setEnableThumbnails,
     setFebboxKey,
+    setRealDebridKey,
     state,
     setEnableAutoplay,
     setEnableSkipCredits,
@@ -448,6 +459,8 @@ export function SettingsPage() {
             setProxyUrls={state.proxyUrls.set}
             febboxKey={state.febboxKey.state}
             setFebboxKey={state.febboxKey.set}
+            realDebridKey={state.realDebridKey.state}
+            setRealDebridKey={state.realDebridKey.set}
             proxyTmdb={state.proxyTmdb.state}
             setProxyTmdb={state.proxyTmdb.set}
           />

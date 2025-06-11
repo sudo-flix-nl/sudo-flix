@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAsync } from "react-use";
 
 import { isExtensionActive } from "@/backend/extension/messaging";
-import { singularProxiedFetch } from "@/backend/helpers/fetch";
+import { proxiedFetch, singularProxiedFetch } from "@/backend/helpers/fetch";
 import { Button } from "@/components/buttons/Button";
 import { Icon, Icons } from "@/components/Icon";
 import { Loading } from "@/components/layout/Loading";
@@ -74,6 +74,7 @@ type SetupData = {
   proxy: Status;
   defaultProxy: Status;
   febboxKeyTest?: Status;
+  realDebridKeyTest?: Status;
 };
 
 function testProxy(url: string) {
@@ -174,9 +175,59 @@ export async function testFebboxKey(febboxKey: string | null): Promise<Status> {
   return "api_down";
 }
 
+export async function testRealDebridKey(
+  realDebridKey: string | null,
+): Promise<Status> {
+  if (!realDebridKey) {
+    return "unset";
+  }
+
+  const maxAttempts = 2;
+  let attempts = 0;
+
+  while (attempts < maxAttempts) {
+    try {
+      console.log(`RD API attempt ${attempts + 1}`);
+      const data = await proxiedFetch(
+        "https://api.real-debrid.com/rest/1.0/user",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${realDebridKey}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      // If we have data and it indicates premium status, return success immediately
+      if (data && typeof data === "object" && data.type === "premium") {
+        console.log("RD premium status confirmed");
+        return "success";
+      }
+
+      console.log("RD response did not indicate premium status");
+      attempts += 1;
+      if (attempts === maxAttempts) {
+        return "invalid_token";
+      }
+      await sleep(3000);
+    } catch (error) {
+      console.error("RD API error:", error);
+      attempts += 1;
+      if (attempts === maxAttempts) {
+        return "api_down";
+      }
+      await sleep(3000);
+    }
+  }
+
+  return "api_down";
+}
+
 function useIsSetup() {
   const proxyUrls = useAuthStore((s) => s.proxySet);
   const febboxKey = usePreferencesStore((s) => s.febboxKey);
+  const realDebridKey = usePreferencesStore((s) => s.realDebridKey);
   const { loading, value } = useAsync(async (): Promise<SetupData> => {
     const extensionStatus: Status = (await isExtensionActive())
       ? "success"
@@ -192,6 +243,7 @@ function useIsSetup() {
     }
 
     const febboxKeyStatus: Status = await testFebboxKey(febboxKey);
+    const realDebridKeyStatus: Status = await testRealDebridKey(realDebridKey);
 
     return {
       extension: extensionStatus,
@@ -200,20 +252,23 @@ function useIsSetup() {
       ...(conf().ALLOW_FEBBOX_KEY && {
         febboxKeyTest: febboxKeyStatus,
       }),
+      realDebridKeyTest: realDebridKeyStatus,
     };
-  }, [proxyUrls, febboxKey]);
+  }, [proxyUrls, febboxKey, realDebridKey]);
 
   let globalState: Status = "unset";
   if (
     value?.extension === "success" ||
     value?.proxy === "success" ||
-    value?.febboxKeyTest === "success"
+    value?.febboxKeyTest === "success" ||
+    value?.realDebridKeyTest === "success"
   )
     globalState = "success";
   if (
     value?.proxy === "error" ||
     value?.extension === "error" ||
-    value?.febboxKeyTest === "error"
+    value?.febboxKeyTest === "error" ||
+    value?.realDebridKeyTest === "error"
   )
     globalState = "error";
 
@@ -354,6 +409,11 @@ export function SetupPart() {
           >
             {t("settings.connections.setup.items.default")}
           </SetupCheckList>
+          {conf().ALLOW_REAL_DEBRID_KEY && (
+            <SetupCheckList status={setupStates.realDebridKeyTest || "unset"}>
+              Real Debrid token
+            </SetupCheckList>
+          )}
           {conf().ALLOW_FEBBOX_KEY && (
             <SetupCheckList status={setupStates.febboxKeyTest || "unset"}>
               Febbox UI token

@@ -7,10 +7,6 @@ import {
   DisplayInterfaceEvents,
   DisplayMeta,
 } from "@/components/player/display/displayInterface";
-import {
-  convertSubtitlesToObjectUrl,
-  convertSubtitlesToVtt,
-} from "@/components/player/utils/captions";
 import { LoadableSource } from "@/stores/player/utils/qualities";
 import { processCdnLink } from "@/utils/cdn";
 import {
@@ -25,6 +21,12 @@ export interface ChromeCastDisplayInterfaceOptions {
   player: cast.framework.RemotePlayer;
   instance: cast.framework.CastContext;
 }
+
+/*
+ ** Chromecasting is unfinished, here is its limitations:
+ **  1. Captions - chromecast requires only VTT, but needs it from a URL. we only have SRT urls
+ **  2. HLS - we've having some issues with content types. sometimes it loads, sometimes it doesn't
+ */
 
 export function makeChromecastDisplayInterface(
   ops: ChromeCastDisplayInterfaceOptions,
@@ -43,8 +45,8 @@ export function makeChromecastDisplayInterface(
     title: "",
     type: MWMediaType.MOVIE,
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let caption: DisplayCaption | null = null;
-  let captionUrl: string | null = null;
 
   function listenForEvents() {
     const listen = async (e: cast.framework.RemotePlayerChangedEvent) => {
@@ -98,66 +100,25 @@ export function makeChromecastDisplayInterface(
     };
   }
 
-  function setupCaptions(): chrome.cast.media.Track[] | null {
-    if (!caption || !caption.srtData) return null;
-
-    try {
-      // Convert SRT to VTT and create an object URL
-      captionUrl = convertSubtitlesToObjectUrl(caption.srtData);
-
-      // Create a text track for Chromecast
-      const track = new chrome.cast.media.Track(
-        1, // trackId
-        chrome.cast.media.TrackType.TEXT,
-      );
-
-      track.trackContentId = captionUrl;
-      track.trackContentType = "text/vtt";
-      track.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
-      track.name = caption.language;
-      track.language = caption.language;
-
-      return [track];
-    } catch (error) {
-      console.error("Error setting up captions for Chromecast:", error);
-      return null;
-    }
-  }
-
   function setupSource() {
     if (!source) {
       ops.controller?.stop();
       return;
     }
 
-    // Determine correct content type
-    let contentType = "video/mp4";
-    if (source.type === "hls") {
-      // Use MIME type that's best supported by Chromecast for HLS
-      contentType = "application/vnd.apple.mpegurl";
-    }
+    let type = "video/mp4";
+    if (source.type === "hls") type = "application/x-mpegurl";
 
     const metaData = new chrome.cast.media.GenericMediaMetadata();
     metaData.title = meta.title;
 
-    // Create media info with proper content ID and content type
-    const mediaInfo = new chrome.cast.media.MediaInfo(
-      processCdnLink(source.url), // Use processed URL as the content ID
-      contentType,
-    );
-
-    // The contentUrl property doesn't exist on the type, use properly typed properties instead
+    const mediaInfo = new chrome.cast.media.MediaInfo("video", type);
+    (mediaInfo as any).contentUrl = processCdnLink(source.url);
     mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
     mediaInfo.metadata = metaData;
     mediaInfo.customData = {
       playbackRate,
     };
-
-    // Set up captions if available
-    const tracks = setupCaptions();
-    if (tracks && tracks.length > 0) {
-      mediaInfo.tracks = tracks;
-    }
 
     const request = new chrome.cast.media.LoadRequest(mediaInfo);
     request.autoplay = true;
@@ -165,29 +126,13 @@ export function makeChromecastDisplayInterface(
 
     if (source.type === "hls") {
       const staticMedia = chrome.cast.media as any;
-      // Set HLS-specific properties to improve reliability
-      if (staticMedia.HlsSegmentFormat) {
-        const media = request.media as any;
-        media.hlsSegmentFormat = staticMedia.HlsSegmentFormat.FMP4;
-        media.hlsVideoSegmentFormat = staticMedia.HlsVideoSegmentFormat.FMP4;
-        // Set additional properties to improve HLS compatibility
-        media.streamType = chrome.cast.media.StreamType.BUFFERED;
-        media.hlsPreload = true;
-      }
+      const media = request.media as any;
+      media.hlsSegmentFormat = staticMedia.HlsSegmentFormat.FMP4;
+      media.hlsVideoSegmentFormat = staticMedia.HlsVideoSegmentFormat.FMP4;
     }
 
-    // Load the media on the Chromecast session
     const session = ops.instance.getCurrentSession();
-    if (session) {
-      session.loadMedia(request).catch((error) => {
-        console.error("Error loading media on Chromecast:", error);
-        emit("error", {
-          message: `Chromecast error: ${error.message || "Failed to load media"}`,
-          errorName: "ChromecastLoadError",
-          type: "global",
-        });
-      });
-    }
+    session?.loadMedia(request);
   }
 
   function setSource() {
@@ -221,14 +166,6 @@ export function makeChromecastDisplayInterface(
       stopListening();
       destroyVideoElement();
       fscreen.removeEventListener("fullscreenchange", fullscreenChange);
-      // Clean up caption URL object if it exists
-      if (captionUrl) {
-        try {
-          URL.revokeObjectURL(captionUrl);
-        } catch (e) {
-          // Ignore errors during cleanup
-        }
-      }
     },
     load(loadOps) {
       source = loadOps.source;
@@ -240,16 +177,6 @@ export function makeChromecastDisplayInterface(
       // cant control qualities
     },
     setCaption(newCaption) {
-      // Clean up previous caption URL if it exists
-      if (captionUrl) {
-        try {
-          URL.revokeObjectURL(captionUrl);
-          captionUrl = null;
-        } catch (e) {
-          // Ignore errors during cleanup
-        }
-      }
-
       caption = newCaption;
       setSource();
     },

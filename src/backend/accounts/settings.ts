@@ -9,6 +9,7 @@ export interface SettingsInput {
   defaultSubtitleLanguage?: string;
   proxyUrls?: string[] | null;
   febboxKey?: string | null;
+  realDebridKey?: string | null;
   enableThumbnails?: boolean;
   enableAutoplay?: boolean;
   enableSkipCredits?: boolean;
@@ -28,6 +29,7 @@ export interface SettingsResponse {
   defaultSubtitleLanguage?: string | null;
   proxyUrls?: string[] | null;
   febboxKey?: string | null;
+  realDebridKey?: string | null;
   enableThumbnails?: boolean;
   enableAutoplay?: boolean;
   enableSkipCredits?: boolean;

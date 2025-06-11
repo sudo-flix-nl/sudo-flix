@@ -396,14 +396,7 @@ export function makeVideoElementDisplayInterface(): DisplayInterface {
       containerElement = container;
     },
     setMeta() {},
-    setCaption(caption) {
-      // If we have a video element and captions are available,
-      // set up the tracks - AirPlay requires VTT format
-      if (videoElement && caption && caption.srtData) {
-        // Subtitles are handled via the track element in VideoContainer.tsx
-        // convertSubtitlesToObjectUrl already handles the conversion to VTT
-      }
-    },
+    setCaption() {},
 
     pause() {
       videoElement?.pause();

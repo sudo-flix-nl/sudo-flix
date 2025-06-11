@@ -977,6 +977,16 @@
       "invalid_token": "Failed to fetch a 'VIP' stream. Your token is invalid!"
     }
   },
+  "realdebrid": {
+    "title": "Real Debrid (Beta)",
+    "description": "Enter your Real Debrid API key to access Real Debrid. Extension required.",
+    "tokenLabel": "API Key",
+    "status": {
+      "failure": "Failed to connect to Real Debrid. Please check your API key.",
+      "api_down": "Real Debrid API is currently unavailable. Please try again later.",
+      "invalid_token": "Invalid API key or non-premium account. Real Debrid requires a premium account."
+    }
+  },
   "watchParty": {
     "status": {
       "inSync": "In sync",
