@@ -90,7 +90,7 @@
   "footer": {
     "legal": {
       "disclaimer": "Disclaimer ◝(ᵔᵕᵔ)◜",
-      "disclaimerText": "Please note: P-Stream does not host any files itself but instead only display's content from 3rd party providers. Legal issues should be taken up with them."
+      "disclaimerText": "Please note: Sudo-Flix does not host any files itself but instead only display's content from 3rd party providers. Legal issues should be taken up with them."
     },
     "links": {
       "discord": "Discord",
@@ -102,7 +102,7 @@
     "tagline": "Watch your favorite shows and movies for free with no ads ever! (っ'ヮ'c)"
   },
   "global": {
-    "name": "P-Stream",
+    "name": "Sudo-Flix",
     "pages": {
       "about": "About",
       "dmca": "DMCA",
@@ -110,7 +110,7 @@
       "support": "Support",
       "login": "Login",
       "onboarding": "Setup",
-      "pagetitle": "{{title}} - P-Stream",
+      "pagetitle": "{{title}} - Sudo-Flix",
       "register": "Register",
       "settings": "Settings",
       "migration": "Migrate Account",
