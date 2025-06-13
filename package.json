@@ -1,7 +1,7 @@
 {
   "packageManager": "pnpm@9.14.4",
   "name": "Sudo-Flix",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "private": false,
   "homepage": "https://github.com/sudo-flix-nl/sudo-flix",
   "scripts": {
