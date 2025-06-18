@@ -17,6 +17,7 @@ import { Menu } from "@/components/player/internals/ContextMenu";
 import { useOverlayRouter } from "@/hooks/useOverlayRouter";
 import { PlayerMeta } from "@/stores/player/slices/source";
 import { usePlayerStore } from "@/stores/player/store";
+import { usePreferencesStore } from "@/stores/preferences";
 import { useProgressStore } from "@/stores/progress";
 
 import { hasAired } from "../utils/aired";
@@ -122,6 +123,9 @@ export function EpisodesView({
   const descriptionRefs = useRef<{
     [key: string]: HTMLParagraphElement | null;
   }>({});
+  const forceCompactEpisodeView = usePreferencesStore(
+    (s) => s.forceCompactEpisodeView,
+  );
 
   const isTextTruncated = (element: HTMLElement | null) => {
     if (!element) return false;
@@ -248,7 +252,12 @@ export function EpisodesView({
     content = (
       <div className="relative">
         {/* Horizontal scroll buttons */}
-        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 px-4 hidden lg:block">
+        <div
+          className={classNames(
+            "absolute left-0 top-1/2 transform -translate-y-1/2 z-10 px-4",
+            forceCompactEpisodeView ? "hidden" : "hidden lg:block",
+          )}
+        >
           <button
             type="button"
             className="p-2 bg-black/80 hover:bg-video-context-hoverColor transition-colors rounded-full border border-video-context-border backdrop-blur-sm"
@@ -261,8 +270,14 @@ export function EpisodesView({
         <div
           ref={carouselRef}
           className={classNames(
-            "flex flex-col lg:flex-row lg:overflow-x-auto space-y-3 sm:space-y-4 lg:space-y-0 lg:space-x-4 pb-4 pt-2 lg:px-12 scrollbar-hide",
-            { "carousel-container": window.innerWidth >= 1024 },
+            "flex pb-4 pt-2 scrollbar-hide",
+            {
+              "carousel-container":
+                window.innerWidth >= 1024 && !forceCompactEpisodeView,
+            },
+            forceCompactEpisodeView
+              ? "flex-col  space-y-3"
+              : "flex-col lg:flex-row lg:overflow-x-auto space-y-3 sm:space-y-4 lg:space-y-0 lg:space-x-4 lg:px-12 ",
           )}
           style={{
             scrollbarWidth: "none",
@@ -289,7 +304,12 @@ export function EpisodesView({
               return (
                 <div key={ep.id} ref={isActive ? activeEpisodeRef : null}>
                   {/* Extra small screens - Simple vertical list with no thumbnails */}
-                  <div className="block sm:hidden w-full px-3">
+                  <div
+                    className={classNames(
+                      "block w-full px-3",
+                      forceCompactEpisodeView ? "" : "sm:hidden",
+                    )}
+                  >
                     <Menu.Link
                       onClick={() => playEpisode(ep.id)}
                       active={isActive}
@@ -327,6 +347,7 @@ export function EpisodesView({
                     onClick={() => playEpisode(ep.id)}
                     className={classNames(
                       "hidden sm:flex lg:hidden w-full rounded-lg overflow-hidden transition-all duration-200 relative cursor-pointer",
+                      forceCompactEpisodeView ? "!hidden" : "",
                       isActive
                         ? "bg-video-context-hoverColor/50"
                         : "hover:bg-video-context-hoverColor/50",
@@ -430,6 +451,7 @@ export function EpisodesView({
                     onClick={() => playEpisode(ep.id)}
                     className={classNames(
                       "hidden lg:block flex-shrink-0 transition-all duration-200 relative cursor-pointer rounded-lg overflow-hidden",
+                      forceCompactEpisodeView ? "!hidden" : "",
                       isActive
                         ? "bg-video-context-hoverColor/50"
                         : "hover:bg-video-context-hoverColor/50",
@@ -547,7 +569,12 @@ export function EpisodesView({
         </div>
 
         {/* Right scroll button */}
-        <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 px-4 hidden lg:block">
+        <div
+          className={classNames(
+            "absolute right-0 top-1/2 transform -translate-y-1/2 z-10 px-4",
+            forceCompactEpisodeView ? "hidden" : "hidden lg:block",
+          )}
+        >
           <button
             type="button"
             className="p-2 bg-black/80 hover:bg-video-context-hoverColor transition-colors rounded-full border border-video-context-border backdrop-blur-sm"
@@ -597,13 +624,25 @@ function EpisodesOverlay({
     [router],
   );
 
+  const forceCompactEpisodeView = usePreferencesStore(
+    (s) => s.forceCompactEpisodeView,
+  );
+
   return (
     <Overlay id={id}>
       <OverlayRouter id={id}>
         <OverlayPage id={id} path="/" width={343} height={431}>
           <SeasonsView setSeason={setSeason} selectedSeason={selectedSeason} />
         </OverlayPage>
-        <OverlayPage id={id} path="/episodes" width={0} height={375} fullWidth>
+        <OverlayPage
+          id={id}
+          path="/episodes"
+          width={343}
+          height={
+            forceCompactEpisodeView || window.innerWidth < 1024 ? 431 : 375
+          }
+          fullWidth={!forceCompactEpisodeView}
+        >
           {selectedSeason.length > 0 ? (
             <EpisodesView
               selectedSeason={selectedSeason}

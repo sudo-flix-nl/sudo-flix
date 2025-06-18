@@ -11,6 +11,7 @@ export interface PreferencesStore {
   enableDetailsModal: boolean;
   enableImageLogos: boolean;
   enableCarouselView: boolean;
+  forceCompactEpisodeView: boolean;
   sourceOrder: string[];
   enableSourceOrder: boolean;
   proxyTmdb: boolean;
@@ -25,6 +26,7 @@ export interface PreferencesStore {
   setEnableDetailsModal(v: boolean): void;
   setEnableImageLogos(v: boolean): void;
   setEnableCarouselView(v: boolean): void;
+  setForceCompactEpisodeView(v: boolean): void;
   setSourceOrder(v: string[]): void;
   setEnableSourceOrder(v: boolean): void;
   setProxyTmdb(v: boolean): void;
@@ -43,6 +45,7 @@ export const usePreferencesStore = create(
       enableDetailsModal: false,
       enableImageLogos: true,
       enableCarouselView: false,
+      forceCompactEpisodeView: false,
       sourceOrder: [],
       enableSourceOrder: false,
       proxyTmdb: false,
@@ -86,6 +89,11 @@ export const usePreferencesStore = create(
       setEnableCarouselView(v) {
         set((s) => {
           s.enableCarouselView = v;
+        });
+      },
+      setForceCompactEpisodeView(v) {
+        set((s) => {
+          s.forceCompactEpisodeView = v;
         });
       },
       setSourceOrder(v) {

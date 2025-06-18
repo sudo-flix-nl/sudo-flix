@@ -18,6 +18,7 @@ export interface SettingsInput {
   enableDetailsModal?: boolean;
   enableImageLogos?: boolean;
   enableCarouselView?: boolean;
+  forceCompactEpisodeView?: boolean;
   sourceOrder?: string[];
   enableSourceOrder?: boolean;
   proxyTmdb?: boolean;

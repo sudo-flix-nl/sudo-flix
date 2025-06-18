@@ -13,6 +13,7 @@ export interface SearchBarProps {
   value: string;
   isSticky?: boolean;
   isInFeatured?: boolean;
+  hideTooltip?: boolean;
 }
 
 export const SearchBarInput = forwardRef<HTMLInputElement, SearchBarProps>(
@@ -101,7 +102,7 @@ export const SearchBarInput = forwardRef<HTMLInputElement, SearchBarProps>(
               placeholder={props.placeholder}
             />
 
-            {showTooltip && (
+            {showTooltip && !props.hideTooltip && (
               <div className="py-4">
                 <p className="font-bold text-sm mb-1 text-search-text">
                   Advanced Search:

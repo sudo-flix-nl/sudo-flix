@@ -1,28 +1,142 @@
 {
   "about": {
-    "description": "P-Stream is a fork of movie-web that is ensured to stay up even after the shutdown of movie-web.app. P-Stream runs on a private, self-hosted VPS. I run this site at a loss; there are no ads due to my beliefs in free media.",
+    "description": "P-Stream is a fork of movie-web that is ensured to stay up even after the shutdown of movie-web.app. P-Stream runs on a private, self-hosted VPS. I run this site at a loss; there are very minimal ads due to my beliefs in free media.",
+    "help": "Can't find an answer? <0>Get support here.</0>",
     "faqTitle": "Common questions",
+    "searchPlaceholder": "Search FAQ...",
+    "sections": {
+      "general": "General",
+      "search": "Search & Content Availability",
+      "playback": "Playback Issues",
+      "connections": "Connections",
+      "language": "Language & Subtitle Settings"
+    },
     "q1": {
+      "title": "Where does the content come from?",
       "body": "P-Stream does not host any content. When you click on something to watch, the internet is searched for the selected media (On the loading screen and in the 'video sources' tab you can see which source you're using). Media never gets uploaded by P-Stream, everything is through this searching mechanism.",
-      "title": "Where does the content come from?"
+      "section": "general"
     },
     "q2": {
+      "title": "Where can I request a show or movie?",
       "body": "It's not possible to request a show or movie, P-Stream does not manage any content. All content is viewed through sources on the internet.",
-      "title": "Where can I request a show or movie?"
+      "section": "search"
     },
     "q3": {
+      "title": "The search results display the show or movie, why can't I play it?",
       "body": "Our search results are powered by The Movie Database (TMDB) and display regardless of whether our sources actually have the content.",
-      "title": "The search results display the show or movie, why can't I play it?"
+      "section": "search"
     },
     "q4": {
+      "title": "What about my data and stuff?",
       "body": "All data is synced to the community backend, anyone is free to use this as well.",
-      "title": "What about my data and stuff?"
+      "section": "general"
     },
     "q5": {
+      "title": "How can I find out more?",
       "body": "P-Stream has a Discord server that can be found at the header of this page!",
-      "title": "How can I find out more?"
+      "section": "general"
     },
-    "title": "About P-Stream (^▽^)"
+    "q6": {
+      "title": "Is there a P-Stream app?",
+      "body": "Not yet, but you can install it as a PWA (Progressive Web App). On iOS, use Safari → Share → Add to Home Screen. On Android, use Chrome → 3 dots → Add to Home Screen. An experimental APK is available via our Discord, but it's not recommended.",
+      "section": "general"
+    },
+    "q7": {
+      "title": "How do I make an account?",
+      "body": "Tap \"Sync to Cloud\" in the dropdown menu or go to Settings to create and sync a community account.",
+      "section": "general"
+    },
+    "q9": {
+      "title": "This media is missing / Can I request media?",
+      "body": "No—since we don't host content, we cannot add or change what's available. The content list is based on what's publicly accessible through the search mechanism.",
+      "section": "search"
+    },
+    "q10": {
+      "title": "I can't find the movie/show I'm searching for!",
+      "body": "TMDB powers our search. Try tapping the 🔎 icon for advanced search options if results aren't accurate.",
+      "section": "search"
+    },
+    "q11": {
+      "title": "Why am I seeing a black screen?",
+      "body": "Likely a corrupt or broken video file. Try switching sources.",
+      "section": "playback"
+    },
+    "q12": {
+      "title": "The episode I'm watching is incorrect.",
+      "body": "Switch to a different source. We don't control any content or episode accuracy.",
+      "section": "playback"
+    },
+    "q13": {
+      "title": "The video quality isn't what I expected.",
+      "body": "Try switching sources. Quality varies by provider; FED API often offers more options.",
+      "section": "playback"
+    },
+    "q14": {
+      "title": "4K isn't available.",
+      "body": "If 4K is not shown, it's likely unavailable from that source.",
+      "section": "playback"
+    },
+    "q15": {
+      "title": "Why is there no audio?",
+      "body": "Ensure your device isn't muted and try switching sources. Audio issues may be source-specific.",
+      "section": "playback"
+    },
+    "q16": {
+      "title": "The video is tinted or washed out.",
+      "body": "Could be a faulty file or an HDR video. Ensure your device supports HDR, or switch sources.",
+      "section": "playback"
+    },
+    "q17": {
+      "title": "I'm experiencing visual glitches.",
+      "body": "Visual bugs usually come from poor file uploads. Try switching sources.",
+      "section": "playback"
+    },
+    "q18": {
+      "title": "The source is loading slowly.",
+      "body": "Speed depends on the hosting site. Switch to another source for better performance.",
+      "section": "playback"
+    },
+    "q19": {
+      "title": "How do I switch sources?",
+      "body": "While playing, tap the ⚙️ icon, then choose another source under \"video sources\".",
+      "section": "playback"
+    },
+    "q20": {
+      "title": "What is FED API?",
+      "body": "FED API is our private scraper that pulls streams directly from Febbox. Each free Febbox account includes 100 GB/month of unlimited bandwidth, and we use your UI token to scrape content as if you're watching it yourself. Setup is easiest via desktop browser, but mobile instructions are available on our Discord.",
+      "section": "connections"
+    },
+    "q21": {
+      "title": "Does FED API work on all devices?",
+      "body": "Yes. Once set up, your token works across all logged-in devices.",
+      "section": "connections"
+    },
+    "q22": {
+      "title": "Why do I need the extension or custom proxy?",
+      "body": "Some sources block scrapers. The extension acts like a local proxy and bypasses such blocks using your IP, headers, and cookies.",
+      "section": "connections"
+    },
+    "q23": {
+      "title": "What is the extension? Is it safe?",
+      "body": "It's a local proxy tool used to access streams that restrict scrapers. It mimics your browsing session. It's also completly opensource and can be found on our github.",
+      "section": "connections"
+    },
+    "q24": {
+      "title": "My febbox token fails during setup. What should I do?",
+      "body": "Your ISP might be blocking FED API. Set a custom DNS like 1.1.1.1 or NextDNS. You can also change your region in the admin panel.",
+      "section": "connections"
+    },
+    "q25": {
+      "title": "How do I change languages?",
+      "body": "We prioritize English, but some sources offer other languages. Try switching sources. For FED API, only Safari supports audio switching in MP4 files.",
+      "section": "language"
+    },
+    "q26": {
+      "title": "My subtitles aren't in sync.",
+      "body": "Use the \"Customize\" option in subtitle settings or tap [ and ] on your keyboard to adjust. You can also upload your own subtitle file.",
+      "section": "language"
+    },
+    "title": "About P-Stream and FAQ (^▽^)"
   },
   "actions": {
     "copied": "Copied",
@@ -104,7 +218,7 @@
   "global": {
     "name": "Sudo-Flix",
     "pages": {
-      "about": "About",
+      "about": "About and FAQ",
       "dmca": "DMCA",
       "discover": "Discover",
       "support": "Support",
@@ -311,7 +425,7 @@
       "offline": "Check your internet connection, silly goose! 🦢"
     },
     "menu": {
-      "about": "About us",
+      "about": "About and FAQ",
       "logout": "Log out",
       "register": "Sync to Cloud",
       "settings": "Settings",
@@ -792,7 +906,10 @@
         "logosLabel": "Image logos",
         "carouselView": "Carousel view",
         "carouselViewDescription": "Display your currently watching and bookmark sections as carousels instead of a grid. Disabled by default.",
-        "carouselViewLabel": "Carousel view"
+        "carouselViewLabel": "Carousel view",
+        "forceCompactEpisodeView": "Force compact episode view",
+        "forceCompactEpisodeViewDescription": "Force the episode carousel in the player to use the \"classic\" compact vertical view. Disabled by default.",
+        "forceCompactEpisodeViewLabel": "Compact episodes"
       }
     },
     "connections": {

@@ -106,6 +106,7 @@ function VideoElement() {
       autoPlay
       playsInline
       ref={videoEl}
+      preload="metadata"
     >
       {subtitleTrack}
     </video>

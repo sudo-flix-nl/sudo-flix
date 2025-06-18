@@ -178,6 +178,13 @@ export function SettingsPage() {
     (s) => s.setEnableCarouselView,
   );
 
+  const forceCompactEpisodeView = usePreferencesStore(
+    (s) => s.forceCompactEpisodeView,
+  );
+  const setForceCompactEpisodeView = usePreferencesStore(
+    (s) => s.setForceCompactEpisodeView,
+  );
+
   const account = useAuthStore((s) => s.account);
   const updateProfile = useAuthStore((s) => s.setAccountProfile);
   const updateDeviceName = useAuthStore((s) => s.updateDeviceName);
@@ -227,6 +234,7 @@ export function SettingsPage() {
     enableSkipCredits,
     enableImageLogos,
     enableCarouselView,
+    forceCompactEpisodeView,
   );
 
   const availableSources = useMemo(() => {
@@ -282,7 +290,8 @@ export function SettingsPage() {
         state.sourceOrder.changed ||
         state.enableSourceOrder.changed ||
         state.proxyTmdb.changed ||
-        state.enableCarouselView.changed
+        state.enableCarouselView.changed ||
+        state.forceCompactEpisodeView.changed
       ) {
         await updateSettings(backendUrl, account, {
           applicationLanguage: state.appLanguage.state,
@@ -301,6 +310,7 @@ export function SettingsPage() {
           enableSourceOrder: state.enableSourceOrder.state,
           proxyTmdb: state.proxyTmdb.state,
           enableCarouselView: state.enableCarouselView.state,
+          forceCompactEpisodeView: state.forceCompactEpisodeView.state,
         });
       }
       if (state.deviceName.changed) {
@@ -337,6 +347,7 @@ export function SettingsPage() {
     setRealDebridKey(state.realDebridKey.state);
     setProxyTmdb(state.proxyTmdb.state);
     setEnableCarouselView(state.enableCarouselView.state);
+    setForceCompactEpisodeView(state.forceCompactEpisodeView.state);
 
     if (state.profile.state) {
       updateProfile(state.profile.state);
@@ -378,6 +389,7 @@ export function SettingsPage() {
     setEnableSourceOrder,
     setProxyTmdb,
     setEnableCarouselView,
+    setForceCompactEpisodeView,
   ]);
   return (
     <SubPageLayout>
@@ -443,6 +455,8 @@ export function SettingsPage() {
             setEnableImageLogos={state.enableImageLogos.set}
             enableCarouselView={state.enableCarouselView.state}
             setEnableCarouselView={state.enableCarouselView.set}
+            forceCompactEpisodeView={state.forceCompactEpisodeView.state}
+            setForceCompactEpisodeView={state.forceCompactEpisodeView.set}
           />
         </div>
         <div id="settings-captions" className="mt-28">
